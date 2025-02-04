@@ -41,7 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function enableMovement(counterId) {
+
         activeCounter = document.getElementById(counterId);
+        activeCounter.classList.add("active"); // Apply active styles
     }
 
     function moveCounter(dx, dy) {
@@ -50,8 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let posX = parseInt(activeCounter.style.left, 10);
         let posY = parseInt(activeCounter.style.top, 10);
-
-        console.log(posX, posY)
 
         let newX = posX + dx * gridSize;
         let newY = posY + dy * gridSize;
@@ -74,5 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     addCounterBtn.addEventListener("click", createCounter);
+
+    // document.addEventListener("click", () => {
+    //     if (activeCounter) {
+    //         activeCounter.classList.remove("active");
+    //         activeCounter = null;
+    //     }
+    // });
 
 });
