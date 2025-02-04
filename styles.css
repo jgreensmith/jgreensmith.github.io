@@ -43,7 +43,6 @@ body, html {
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
-    cursor: pointer;
     transition: background 0.3s;
     width: 100px;
     height: 100px;
@@ -51,4 +50,31 @@ body, html {
 
 .cell:hover {
     background-color: #bbb;
+}
+.counter {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background-color: red;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    transition: 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+#addCounterBtn {
+    position: absolute;
+    bottom: 20px;
+    padding: 10px 20px;
+    background-color: green;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
 }
