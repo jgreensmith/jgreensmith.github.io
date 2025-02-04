@@ -31,8 +31,8 @@ body, html {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     border: 2px solid white;
 }
 
@@ -45,6 +45,8 @@ body, html {
     font-size: 1.5rem;
     cursor: pointer;
     transition: background 0.3s;
+    width: 100px;
+    height: 100px;
 }
 
 .cell:hover {
