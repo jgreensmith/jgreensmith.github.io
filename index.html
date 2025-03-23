@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Mini DnD</title>
+
 </head>
 <body>
-    <div class="board-container">
-        <!-- This button will be in the navbar -->
-        <button id="addCounterBtn">Add Counter</button>
-        <div id="board">
+    <div id="game-container">
+        <h2 id="story-text">You find a mysterious cave. Do you enter?</h2>
+        <div id="choices-container">
+            <button class="choice" onclick="makeChoice(1)">Enter the cave</button>
+            <button class="choice" onclick="makeChoice(2)">Walk away</button>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="adventure_script.js"></script>
 </body>
 </html>
