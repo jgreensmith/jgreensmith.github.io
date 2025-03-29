@@ -1,6 +1,5 @@
 let adventureData = [];
 let currentStep = 0;
-const url = 'http://localhost:8000'
 
 async function loadAdventure() {
     // This loads the adventure data, including all the choices
@@ -49,12 +48,12 @@ function renderStep(stepIndex) {
             button.innerText = option;
             button.onclick = () => {
                 if(option === 'Flee') {
-                    location.replace(`${url}/loser.html`);
+                    location.replace('/loser.html');
                 } else {
                     //Map code is based on desicions 
                     const mapCode = adventureData.toString()
                     document.cookie = `mapCode=${mapCode}; path=/; secure; SameSite=Strict;`;
-                    location.replace(`${url}/map.html`);
+                    location.replace('/map.html');
 
                 };
             };
