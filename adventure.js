@@ -1,5 +1,6 @@
 let adventureData = [];
 let currentStep = 0;
+let stepTracker = [];
 
 async function loadAdventure() {
     // This loads the adventure data, including all the choices
@@ -28,11 +29,12 @@ function renderStep(stepIndex) {
             button.innerText = option.option;
             button.onclick = () => {
                 currentStep = option.result;
-                adventureData.push(index);
+                stepTracker.push(index);
                 if (step.outcomes) {
                     const outcomeMessage = step.outcomes[option.outcome];
                     if (outcomeMessage) {
-                        alert(outcomeMessage);
+                        //alert(outcomeMessage);
+                        document.cookie = `helper=${option.outcome}; path=/; secure; SameSite=Strict;`;
                     }
                 }
                 renderStep(currentStep);
@@ -51,8 +53,7 @@ function renderStep(stepIndex) {
                     location.replace('/loser.html');
                 } else {
                     //Map code is based on desicions 
-                    const mapCode = adventureData.toString()
-                    document.cookie = `mapCode=${mapCode}; path=/; secure; SameSite=Strict;`;
+                    document.cookie = `map=${stepTracker.join('')}; path=/; secure; SameSite=Strict;`;
                     location.replace('/map.html');
 
                 };
