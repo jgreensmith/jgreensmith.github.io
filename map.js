@@ -20,10 +20,7 @@ function createCounter(name, startTop, startLeft) {
     const counterId = `counter-${document.querySelectorAll(".counter").length}`;
     counterDiv.id = counterId;
     counterDiv.innerText = name;
-    //console.log(Math.floor(Math.random() * (window.innerWidth / gridSize)) * gridSize)
-    // Random initial position within grid boundaries
-    // counterDiv.style.left = `${Math.floor(Math.random() * (window.innerWidth / gridSize)) * gridSize}px`;
-    // counterDiv.style.top = `${Math.floor(Math.random() * (window.innerHeight / gridSize)) * gridSize}px`;
+
 
     counterDiv.style.left = startLeft;
     counterDiv.style.top = startTop;
