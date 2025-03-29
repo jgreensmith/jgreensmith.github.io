@@ -10,7 +10,7 @@ async function loadAdventure() {
     renderStep(currentStep);
 }
 
-function renderStep(stepIndex) {
+async function renderStep(stepIndex) {
     //render the html based on the data index 
     const step = adventureData[stepIndex];
     const storyText = document.getElementById("story-text");
@@ -19,7 +19,7 @@ function renderStep(stepIndex) {
 
     // Update story text and image
     storyText.innerText = step.question;
-    img.src = step.image;
+    img.src = await step.image;
     // Clear and render choices
     choicesContainer.innerHTML = "";
     if (step.options) {

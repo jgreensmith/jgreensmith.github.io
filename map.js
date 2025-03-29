@@ -13,18 +13,20 @@ function getCookie(name) {
 }
 
 // Function to create a new counter
-function createCounter() {
+function createCounter(name, startTop, startLeft) {
     const counterDiv = document.createElement("div");
     counterDiv.classList.add("counter");
     
     const counterId = `counter-${document.querySelectorAll(".counter").length}`;
     counterDiv.id = counterId;
-    counterDiv.innerText = "0";
-    
+    counterDiv.innerText = name;
+    //console.log(Math.floor(Math.random() * (window.innerWidth / gridSize)) * gridSize)
     // Random initial position within grid boundaries
-    counterDiv.style.left = `${Math.floor(Math.random() * (window.innerWidth / gridSize)) * gridSize}px`;
-    counterDiv.style.top = `${Math.floor(Math.random() * (window.innerHeight / gridSize)) * gridSize}px`;
+    // counterDiv.style.left = `${Math.floor(Math.random() * (window.innerWidth / gridSize)) * gridSize}px`;
+    // counterDiv.style.top = `${Math.floor(Math.random() * (window.innerHeight / gridSize)) * gridSize}px`;
 
+    counterDiv.style.left = startLeft;
+    counterDiv.style.top = startTop;
     // Attach click event to activate movement for this counter
     counterDiv.addEventListener("click", () => enableMovement(counterId));
 
@@ -56,24 +58,23 @@ function moveCounter(dx, dy) {
 }
 
 async function loadMap() {
-    cookie = getCookie('map');
-    mapIndex = parseInt(cookie[0]);
+    mapCookie = getCookie('map');
+    mapIndex = parseInt(mapCookie[0]);
+    helperCookie = getCookie('helper');
 
     //console.log(typeof mapIndex);
 
     res = await fetch("map.json");
     data = await res.json();
     
-    console.log(data);
 
-    renderMap(data[mapIndex]);
+    renderMap(data[mapIndex], helperCookie);
 }
 
-function renderMap(map) {
+function renderMap(map, helperCookie) {
 
     const boardContainer = document.getElementById('board-container')
     const board = document.getElementById("board");
-    const addCounterBtn = document.getElementById("addCounterBtn");
 
     const cols = Math.ceil(window.innerWidth / 100);
     const rows = Math.ceil(window.innerHeight / 100);
@@ -87,10 +88,14 @@ function renderMap(map) {
         const cell = document.createElement("div");
         cell.classList.add("cell");
         board.appendChild(cell);
-    }
+    };
 
-    
+    createCounter('Monster', '400px', '1100px');
+    createCounter('You', '0px', '200px');
 
+    if(helperCookie === "success") {
+        createCounter('Helper', '100px', '200px');
+    };
 
 
     window.addEventListener("keydown", (event) => {
@@ -101,14 +106,7 @@ function renderMap(map) {
         if (event.key === "ArrowDown") moveCounter(0, 1);
     });
 
-    addCounterBtn.addEventListener("click", createCounter);
 
-    // document.addEventListener("click", () => {
-    //     if (activeCounter) {
-    //         activeCounter.classList.remove("active");
-    //         activeCounter = null;
-    //     }
-    // });
 
 }
 
