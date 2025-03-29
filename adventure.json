@@ -21,19 +21,27 @@
         "question": "Beware, Danger lies ahead! I can help but if you die, i'll eat you.",
         "image": "images/barbarian.jpg",
         "options": [
-            {
-                "option": "I Suppose That's Fair, Let's Go",
-                "result": 4
-            },
+            
             {
                 "option": "Get Away, Monster!",
-                "result": 4
+                "result": 4,
+                "outcome": "fail"
+            },
+            {
+                "option": "I Suppose That's Fair, Let's Go",
+                "result": 4,
+                "outcome": "success"
             },
             {
                 "option": "Not if I Eat You First!",
-                "result": 4
+                "result": 4,
+                "outcome": "fail"
             }
-        ]
+        ],
+        "outcomes": {
+            "success": "The Barbarian will help you in your Quest",
+            "fail": "The Barbarian will not help you"
+        }
     },
     {
         "question": "You're gonna need my help in there laddy. It'll cost you though. I'll take half the treasure...",
@@ -41,17 +49,25 @@
         "options": [
             {
                 "option": "Sure, we have a deal",
-                "result": 5
+                "result": 5,
+                "outcome": "success"
             },
             {
                 "option": "You'll get nothing.",
-                "result": 5
+                "result": 5,
+                "outcome": "fail"
+
             },
             {
                 "option": "How about a quarter?",
-                "result": 5
+                "result": 5,
+                "outcome": "fail"
             }
-        ]
+        ],
+        "outcomes": {
+            "success": "The Dwarf will help you in your Quest",
+            "fail": "The Dwarf will not help you"
+        }
     },
     {
         "question": "Greetings traveller, if you wish for my help in the danger before you, answer me this: What has roots as nobody sees, Is taller than trees,up, up it goes, and yet never grows?",
@@ -59,17 +75,24 @@
         "options": [
             {
                 "option": "A Mountain",
-                "result": 6
+                "result": 6,
+                "outcome": "success"
             },
             {
                 "option": "A Tower",
-                "result": 6
+                "result": 6,
+                "outcome": "fail"
             },
             {
                 "option": "The Sky",
-                "result": 6
+                "result": 6,
+                "outcome": "fail"
             }
-        ]
+        ],
+        "outcomes": {
+            "success": "The Wizard will help you in your Quest",
+            "fail": "The Wizard will not help you"
+        }
     },
     {
         "question": "You find yourself face to face with a White dragon! You see it is guarding the treasure. What do you do?",
