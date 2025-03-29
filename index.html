@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini DnD</title>
-
+    <link rel="stylesheet" href="adventure.css">
 </head>
 <body>
     <div id="game-container">
-        <h2 id="story-text">You find a mysterious cave. Do you enter?</h2>
-        <div id="choices-container">
-            <button class="choice" onclick="makeChoice(1)">Enter the cave</button>
-            <button class="choice" onclick="makeChoice(2)">Walk away</button>
-        </div>
+
+            <div id="text-stuff">
+                <p id="story-text"></p>
+                <div id="choices-container"></div>
+            </div>
+            
+            <div id="img-box" class="image-box-cl">
+                <img id="story-image" src="" alt="Adventure scene">
+            </div>
+
     </div>
+
     <script src="adventure.js"></script>
 </body>
 </html>
