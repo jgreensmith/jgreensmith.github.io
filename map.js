@@ -1,4 +1,5 @@
-const gridSize = 100;
+const gridSize = 100;    
+
 let posX = 0;
 let posY = 0;
 let counter = 0;
@@ -22,8 +23,8 @@ function createCounter(name, startTop, startLeft) {
     counterDiv.innerText = name;
 
 
-    counterDiv.style.left = startLeft;
     counterDiv.style.top = startTop;
+    counterDiv.style.left = startLeft;
     // Attach click event to activate movement for this counter
     counterDiv.addEventListener("click", () => enableMovement(counterId));
 
@@ -38,17 +39,22 @@ function enableMovement(counterId) {
 
 function moveCounter(dx, dy) {
 
+    
     if (!activeCounter) return; // Only move if counter is active
     
     let posX = parseInt(activeCounter.style.left, 10);
     let posY = parseInt(activeCounter.style.top, 10);
 
+    
     let newX = posX + dx * gridSize;
     let newY = posY + dy * gridSize;
+    
+    console.log(newX);
 
-    if (newX >= 0 && newX < window.innerWidth - gridSize) posX = newX;
+    if (newX >= 0 && newX < window.innerWidth - gridSize && newX >= 260) posX = newX;
     if (newY >= 0 && newY < window.innerHeight - gridSize) posY = newY;
-
+    
+    
     activeCounter.style.left = `${posX}px`;
     activeCounter.style.top = `${posY}px`;
 
@@ -69,31 +75,34 @@ async function loadMap() {
 }
 
 function renderMap(map, helperCookie) {
-
-    const boardContainer = document.getElementById('board-container')
     const board = document.getElementById("board");
+    const boardContainer = document.getElementById('board-container');
+    // Calculate dimensions based on the boardContainer
+    const containerWidth = boardContainer.offsetWidth;
+    const containerHeight = boardContainer.offsetHeight;
 
-    const cols = Math.ceil(window.innerWidth / 100);
-    const rows = Math.ceil(window.innerHeight / 100);
-
+    const cols = Math.floor(containerWidth / gridSize);
+    const rows = Math.floor(containerHeight / gridSize);
 
     boardContainer.style.backgroundImage = `url(${map.image})`;
-    board.style.gridTemplateColumns = `repeat(${cols}, 100px)`;
-    board.style.gridTemplateRows = `repeat(${rows}, 100px)`;
+    board.style.gridTemplateColumns = `repeat(${cols}, ${gridSize}px)`;
+    board.style.gridTemplateRows = `repeat(${rows}, ${gridSize}px)`;
+
+    // Clear existing cells
+    board.innerHTML = "";
 
     for (let i = 0; i < cols * rows; i++) {
         const cell = document.createElement("div");
         cell.classList.add("cell");
         board.appendChild(cell);
-    };
+    }
 
-    createCounter('Monster', '400px', '1100px');
-    createCounter('You', '0px', '200px');
+    createCounter('Monster', '400px', '1160px');
+    createCounter('You', '0px', '260px');
 
-    if(helperCookie === "success") {
-        createCounter('Helper', '100px', '200px');
-    };
-
+    if (helperCookie === "success") {
+        createCounter('Helper', '100px', '260px');
+    }
 
     window.addEventListener("keydown", (event) => {
         if (!activeCounter) return; // Only move if a counter is selected
@@ -102,9 +111,6 @@ function renderMap(map, helperCookie) {
         if (event.key === "ArrowUp") moveCounter(0, -1);
         if (event.key === "ArrowDown") moveCounter(0, 1);
     });
-
-
-
 }
 
 document.addEventListener("DOMContentLoaded", () => {
