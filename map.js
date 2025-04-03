@@ -4,7 +4,8 @@ let posX = 0;
 let posY = 0;
 let counter = 0;
 let activeCounter = null; // Track which counter is active
-
+let counters = []; // Store all counters
+let currentCounterIndex = -1; // Track the current counter index
 
 function getCookie(name) {
     let value = `; ${document.cookie}`;
@@ -22,42 +23,51 @@ function createCounter(name, startTop, startLeft) {
     counterDiv.id = counterId;
     counterDiv.innerText = name;
 
-
     counterDiv.style.top = startTop;
     counterDiv.style.left = startLeft;
     // Attach click event to activate movement for this counter
-    counterDiv.addEventListener("click", () => enableMovement(counterId));
 
     board.appendChild(counterDiv);
+
+    counters.push(counterDiv); // Add to counters list
 }
 
-function enableMovement(counterId) {
-
-    activeCounter = document.getElementById(counterId);
-    activeCounter.classList.add("active"); // Apply active styles
-}
 
 function moveCounter(dx, dy) {
-
-    
     if (!activeCounter) return; // Only move if counter is active
     
     let posX = parseInt(activeCounter.style.left, 10);
     let posY = parseInt(activeCounter.style.top, 10);
 
-    
     let newX = posX + dx * gridSize;
     let newY = posY + dy * gridSize;
     
-    console.log(newX);
-
     if (newX >= 0 && newX < window.innerWidth - gridSize && newX >= 260) posX = newX;
     if (newY >= 0 && newY < window.innerHeight - gridSize) posY = newY;
     
-    
     activeCounter.style.left = `${posX}px`;
     activeCounter.style.top = `${posY}px`;
+}
 
+function iterateCounters() {
+    if (counters.length === 0) return;
+
+    // Remove 'active' class from the current counter
+    if (currentCounterIndex >= 0) {
+        counters[currentCounterIndex].classList.remove("active");
+    }
+
+    // Move to the next counter and then loop back to the begining 
+    // 0/3 = 0 r 0, 2/3 = 0 r 2...
+    currentCounterIndex = (currentCounterIndex + 1) % counters.length;
+
+    activeCounter = counters[currentCounterIndex];
+    
+    if(activeCounter.innerText == "You") {
+        console.log('scoops');
+    }
+    // Add 'active' class to the new counter
+    activeCounter.classList.add("active");
 }
 
 async function loadMap() {
@@ -65,12 +75,9 @@ async function loadMap() {
     mapIndex = parseInt(mapCookie[0]);
     helperCookie = getCookie('helper');
 
-    //console.log(typeof mapIndex);
-
     res = await fetch("map.json");
     data = await res.json();
     
-
     renderMap(data[mapIndex], helperCookie);
 }
 
@@ -115,4 +122,8 @@ function renderMap(map, helperCookie) {
 
 document.addEventListener("DOMContentLoaded", () => {
     loadMap();
+
+    // Add event listener to the button
+    const iterateButton = document.getElementById("iterate-button");
+    iterateButton.addEventListener("click", iterateCounters);
 });
