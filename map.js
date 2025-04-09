@@ -109,6 +109,35 @@ function iterateCounters() {
                 if (newMonsterY === youY) dy = 0;
             }
         }
+    } else {
+        // Allow the user to move the active counter up to 4 times.
+        let movesRemaining = 5;
+
+        // Add a temporary event listener for keydown to handle movement.
+        function handleUserMove(event) {
+            if (movesRemaining <= 0) {
+            // Remove the event listener once the user has used all moves.
+            window.removeEventListener("keydown", handleUserMove);
+            return;
+            }
+
+            if (event.key === "ArrowLeft") {
+            moveCounter(-1, 0);
+            movesRemaining--;
+            } else if (event.key === "ArrowRight") {
+            moveCounter(1, 0);
+            movesRemaining--;
+            } else if (event.key === "ArrowUp") {
+            moveCounter(0, -1);
+            movesRemaining--;
+            } else if (event.key === "ArrowDown") {
+            moveCounter(0, 1);
+            movesRemaining--;
+            }
+        }
+
+        // Attach the event listener to the window for user input.
+        window.addEventListener("keydown", handleUserMove);
     }
 
     // Add the 'active' class to the new active counter to visually indicate it is active.
@@ -156,13 +185,7 @@ function renderMap(map, helperCookie) {
         createCounter('Helper', '100px', '260px');
     }
 
-    window.addEventListener("keydown", (event) => {
-        if (!activeCounter) return; // Only move if a counter is selected
-        if (event.key === "ArrowLeft") moveCounter(-1, 0);
-        if (event.key === "ArrowRight") moveCounter(1, 0);
-        if (event.key === "ArrowUp") moveCounter(0, -1);
-        if (event.key === "ArrowDown") moveCounter(0, 1);
-    });
+
 }
 
 document.addEventListener("DOMContentLoaded", () => {

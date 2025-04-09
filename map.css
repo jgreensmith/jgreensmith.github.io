@@ -7,6 +7,7 @@ body, html {
     justify-content: center;
     align-items: center;
     background-color: #222;
+    overflow: hidden;
 }
 .game-container {
     display: flex;
@@ -15,7 +16,31 @@ body, html {
 .control-panel {
     width: 20vw;
     height: 100vh;
-    background-color: azure;
+    background-color: #2a2a40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.control-panel button {
+    width: 80%;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.control-panel button:hover {
+    background-color: #0056b3;
 }
 
 #board-container {
@@ -84,6 +109,21 @@ body, html {
 .counter.active {
     background-color: rgba(255, 0, 0, 0.6); 
     border: 2px solid white; 
+}
+
+#info-display {
+    width: 80%;
+    height: 200px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #444;
+    border: 1px solid #666;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 
