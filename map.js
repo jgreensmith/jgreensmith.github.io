@@ -19,7 +19,7 @@ function createCounter(name, startTop, startLeft) {
     const counterDiv = document.createElement("div");
     counterDiv.classList.add("counter");
     
-    const counterId = `counter-${document.querySelectorAll(".counter").length}`;
+    const counterId = `counter-${name}`;
     counterDiv.id = counterId;
     counterDiv.innerText = name;
 
@@ -50,23 +50,68 @@ function moveCounter(dx, dy) {
 }
 
 function iterateCounters() {
-    if (counters.length === 0) return;
+    if (counters.length === 0) return; // If there are no counters, exit the function.
 
-    // Remove 'active' class from the current counter
+    // Remove the 'active' class from the currently active counter (if any).
     if (currentCounterIndex >= 0) {
         counters[currentCounterIndex].classList.remove("active");
     }
 
-    // Move to the next counter and then loop back to the begining 
-    // 0/3 = 0 r 0, 2/3 = 0 r 2...
+    // Move to the next counter in the list. If at the end, loop back to the first counter.
     currentCounterIndex = (currentCounterIndex + 1) % counters.length;
 
+    // Set the new active counter based on the updated index.
     activeCounter = counters[currentCounterIndex];
-    
-    if(activeCounter.innerText == "You") {
-        console.log('scoops');
+
+    // Get references to the "Monster" and "You" counters by their IDs.
+    const monster = document.getElementById("counter-Monster");
+    const you = document.getElementById("counter-You");
+
+    // Check if the active counter is the "Monster".
+    if (activeCounter.id === monster.id) {
+        // Get the current position of the "Monster" counter.
+        const monsterX = parseInt(monster.style.left, 10);
+        const monsterY = parseInt(monster.style.top, 10);
+
+        // Get the current position of the "You" counter.
+        const youX = parseInt(you.style.left, 10);
+        const youY = parseInt(you.style.top, 10);
+
+        // Initialize movement direction variables (dx for horizontal, dy for vertical).
+        let dx = 0, dy = 0;
+
+        // Determine the horizontal direction to move:
+        // If the "Monster" is to the left of "You", move right (dx = 1).
+        // If the "Monster" is to the right of "You", move left (dx = -1).
+        if (monsterX < youX) dx = 1;
+        else if (monsterX > youX) dx = -1;
+
+        // Determine the vertical direction to move:
+        // If the "Monster" is above "You", move down (dy = 1).
+        // If the "Monster" is below "You", move up (dy = -1).
+        if (monsterY < youY) dy = 1;
+        else if (monsterY > youY) dy = -1;
+
+        // Move the "Monster" counter up to 4 spaces towards the "You" counter.
+        for (let i = 0; i < 4; i++) {
+            // Only move if there is still a direction to move in (dx or dy is not 0).
+            if (dx !== 0 || dy !== 0) {
+                moveCounter(dx, dy); // Move the "Monster" one step in the determined direction.
+
+                // Recalculate the "Monster" position after the move.
+                const newMonsterX = parseInt(monster.style.left, 10);
+                const newMonsterY = parseInt(monster.style.top, 10);
+
+                // If the "Monster" aligns with "You" horizontally, stop horizontal movement.
+                if (newMonsterX === youX) dx = 0;
+
+                // If the "Monster" aligns with "You" vertically, stop vertical movement.
+                if (newMonsterY === youY) dy = 0;
+            }
+        }
     }
-    // Add 'active' class to the new counter
+
+    // Add the 'active' class to the new active counter to visually indicate it is active.
     activeCounter.classList.add("active");
 }
 
