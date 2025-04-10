@@ -43,6 +43,11 @@ body, html {
     background-color: #0056b3;
 }
 
+.control-panel button:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
 #board-container {
     width: 80vw;
     height: 100vh;

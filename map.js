@@ -6,6 +6,10 @@ let counter = 0;
 let activeCounter = null; // Track which counter is active
 let counters = []; // Store all counters
 let currentCounterIndex = -1; // Track the current counter index
+let monsterHealth = 80;
+let youHealth = 50;
+let helperHealth = 50;
+
 
 function getCookie(name) {
     let value = `; ${document.cookie}`;
@@ -32,6 +36,42 @@ function createCounter(name, startTop, startLeft) {
     counters.push(counterDiv); // Add to counters list
 }
 
+function attackMonster() {
+    if (!activeCounter) return;
+    const monster = document.getElementById("counter-Monster");
+    
+
+
+};
+
+function updateAttackButtonState() {
+    const attackButton = document.getElementById("attack-button");
+    const monster = document.getElementById("counter-Monster");
+    attackButton.disabled = true;
+
+    // Disable the attack button if the active counter is the monster
+    if (activeCounter && activeCounter.id === monster.id) {
+        attackButton.disabled = true;
+        return;
+    }
+
+    // Check if the active counter is within 1 space of the monster
+    const monsterX = parseInt(monster.style.left, 10);
+    const monsterY = parseInt(monster.style.top, 10);
+
+    if (activeCounter) {
+        const activeX = parseInt(activeCounter.style.left, 10);
+        const activeY = parseInt(activeCounter.style.top, 10);
+
+        const isWithinOneSpace =
+            Math.abs(monsterX - activeX) <= gridSize &&
+            Math.abs(monsterY - activeY) <= gridSize;
+
+        attackButton.disabled = !isWithinOneSpace;
+    } else {
+        attackButton.disabled = true; // Disable if no active counter
+    }
+}
 
 function moveCounter(dx, dy) {
     if (!activeCounter) return; // Only move if counter is active
@@ -47,6 +87,9 @@ function moveCounter(dx, dy) {
     
     activeCounter.style.left = `${posX}px`;
     activeCounter.style.top = `${posY}px`;
+
+    // Update the attack button state after moving a counter.
+    updateAttackButtonState();
 }
 
 function iterateCounters() {
@@ -55,7 +98,7 @@ function iterateCounters() {
     // Remove the 'active' class from the currently active counter (if any).
     if (currentCounterIndex >= 0) {
         counters[currentCounterIndex].classList.remove("active");
-    }
+    };
 
     // Move to the next counter in the list. If at the end, loop back to the first counter.
     currentCounterIndex = (currentCounterIndex + 1) % counters.length;
@@ -122,17 +165,17 @@ function iterateCounters() {
             }
 
             if (event.key === "ArrowLeft") {
-            moveCounter(-1, 0);
-            movesRemaining--;
+                moveCounter(-1, 0);
+                movesRemaining--;
             } else if (event.key === "ArrowRight") {
-            moveCounter(1, 0);
-            movesRemaining--;
+                moveCounter(1, 0);
+                movesRemaining--;
             } else if (event.key === "ArrowUp") {
-            moveCounter(0, -1);
-            movesRemaining--;
+                moveCounter(0, -1);
+                movesRemaining--;
             } else if (event.key === "ArrowDown") {
-            moveCounter(0, 1);
-            movesRemaining--;
+                moveCounter(0, 1);
+                movesRemaining--;
             }
         }
 
@@ -142,7 +185,7 @@ function iterateCounters() {
 
     // Add the 'active' class to the new active counter to visually indicate it is active.
     activeCounter.classList.add("active");
-}
+};
 
 async function loadMap() {
     mapCookie = getCookie('map');
@@ -178,11 +221,11 @@ function renderMap(map, helperCookie) {
         board.appendChild(cell);
     }
 
-    createCounter('Monster', '400px', '1160px');
-    createCounter('You', '0px', '260px');
+    createCounter('Monster', '385px', '1185px');
+    createCounter('You', '85px', '285px');
 
     if (helperCookie === "success") {
-        createCounter('Helper', '100px', '260px');
+        createCounter('Helper', '185px', '285px');
     }
 
 
@@ -194,4 +237,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add event listener to the button
     const iterateButton = document.getElementById("iterate-button");
     iterateButton.addEventListener("click", iterateCounters);
+    const attackButton = document.getElementById("attack-button");
+    attackButton.addEventListener("click", attackMonster);
+
+
+    // Update the attack button state initially.
+    updateAttackButtonState();
 });
