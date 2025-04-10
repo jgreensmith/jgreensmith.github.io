@@ -9,6 +9,7 @@ let currentCounterIndex = -1; // Track the current counter index
 let monsterHealth = 80;
 let youHealth = 50;
 let helperHealth = 50;
+let ac = 15;
 
 
 function getCookie(name) {
@@ -36,11 +37,42 @@ function createCounter(name, startTop, startLeft) {
     counters.push(counterDiv); // Add to counters list
 }
 
-function attackMonster() {
-    if (!activeCounter) return;
-    const monster = document.getElementById("counter-Monster");
-    
+function loadStats() {
+    const infoDisplay = document.getElementById("health");
 
+    // Populate the info-display with health stats
+    infoDisplay.innerHTML = `
+        <p><strong>Monster HP:</strong> ${monsterHealth}</p>
+        <p><strong>Your HP:</strong> ${youHealth}</p>
+        <p><strong>Helper HP:</strong> ${helperHealth}</p>
+    `;
+}
+
+function attackMonster(target) {
+    if (!activeCounter) return;
+    const infoDisplay = document.getElementById("dice");
+
+    let attack = Math.floor(Math.random() * 20) + 5;
+    let damage = 0;
+    let result = "Miss!"
+    
+    if (attack >= ac) {
+        damage = Math.floor(Math.random() * 10) + 3;
+        result = "Hit!"
+        if (target === "you") {
+            youHealth = youHealth - damage
+        } else {
+            monsterHealth = monsterHealth - damage
+        }
+    } 
+
+    infoDisplay.innerHTML = `
+        <p><strong>Attack:</strong> ${attack} to hit</p>
+        <p><strong>AC:</strong> ${ac}</p>
+        <p><strong>Result:</strong> ${result}</p>
+        <p><strong>Damage:</strong> ${damage}</p>
+    `;
+    loadStats()
 
 };
 
@@ -234,13 +266,14 @@ function renderMap(map, helperCookie) {
 document.addEventListener("DOMContentLoaded", () => {
     loadMap();
 
-    // Add event listener to the button
     const iterateButton = document.getElementById("iterate-button");
     iterateButton.addEventListener("click", iterateCounters);
     const attackButton = document.getElementById("attack-button");
     attackButton.addEventListener("click", attackMonster);
 
+    // Load stats initially
+    loadStats();
 
-    // Update the attack button state initially.
+    // Update the attack button state initially
     updateAttackButtonState();
 });
