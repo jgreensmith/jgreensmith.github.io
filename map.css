@@ -11,6 +11,12 @@ body, html {
 }
 .game-container {
     display: flex;
+    margin-left: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1320px;
+    height: 672px;
 }
 
 .control-panel {

@@ -33,7 +33,7 @@ async function renderStep(stepIndex) {
                 if (step.outcomes) {
                     const outcomeMessage = step.outcomes[option.outcome];
                     if (outcomeMessage) {
-                        //alert(outcomeMessage);
+                        alert(outcomeMessage);
                         document.cookie = `helper=${option.outcome}; path=/; secure; SameSite=Strict;`;
                     }
                 }

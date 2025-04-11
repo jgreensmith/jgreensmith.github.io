@@ -7,9 +7,9 @@ let activeCounter = null; // Track which counter is active
 let counters = []; // Store all counters
 let currentCounterIndex = -1; // Track the current counter index
 let monsterHealth = 80;
-let youHealth = 50;
-let helperHealth = 50;
-let ac = 15;
+let youHealth = 40;
+let helperHealth = 40;
+let ac = 12;
 
 
 function getCookie(name) {
@@ -48,23 +48,36 @@ function loadStats() {
     `;
 }
 
-function attackMonster(target) {
+function attack(targetty) {
     if (!activeCounter) return;
+    const attackButton = document.getElementById("attack-button");
     const infoDisplay = document.getElementById("dice");
-
-    let attack = Math.floor(Math.random() * 20) + 5;
+    let attack = Math.floor(Math.random() * 20) + 6;
     let damage = 0;
     let result = "Miss!"
     
     if (attack >= ac) {
-        damage = Math.floor(Math.random() * 10) + 3;
+        damage = Math.floor(Math.random() * 10) + 5;
+        if (attack === 26){
+            alert("CRITICAL SUCCESS!");
+            damage = damage * 2
+        }
         result = "Hit!"
-        if (target === "you") {
+        if (targetty === "you") {
             youHealth = youHealth - damage
+            if (youHealth <= 0) {
+                location.replace('/loser.html');
+            }
+
         } else {
             monsterHealth = monsterHealth - damage
+            if (monsterHealth <= 0) {
+                location.replace('/winner.html');
+            }
         }
     } 
+
+
 
     infoDisplay.innerHTML = `
         <p><strong>Attack:</strong> ${attack} to hit</p>
@@ -73,6 +86,7 @@ function attackMonster(target) {
         <p><strong>Damage:</strong> ${damage}</p>
     `;
     loadStats()
+    attackButton.disabled = true;
 
 };
 
@@ -182,6 +196,10 @@ function iterateCounters() {
 
                 // If the "Monster" aligns with "You" vertically, stop vertical movement.
                 if (newMonsterY === youY) dy = 0;
+            } else {
+                moveCounter(1, 0); 
+                attack("you");
+                break;
             }
         }
     } else {
@@ -192,8 +210,8 @@ function iterateCounters() {
         function handleUserMove(event) {
             if (movesRemaining <= 0) {
             // Remove the event listener once the user has used all moves.
-            window.removeEventListener("keydown", handleUserMove);
-            return;
+                window.removeEventListener("keydown", handleUserMove);
+                return;
             }
 
             if (event.key === "ArrowLeft") {
@@ -253,11 +271,11 @@ function renderMap(map, helperCookie) {
         board.appendChild(cell);
     }
 
-    createCounter('Monster', '385px', '1185px');
-    createCounter('You', '85px', '285px');
+    createCounter('Monster', '400px', '1200px');
+    createCounter('You', '100px', '300px');
 
     if (helperCookie === "success") {
-        createCounter('Helper', '185px', '285px');
+        createCounter('Helper', '200px', '300px');
     }
 
 
@@ -269,7 +287,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const iterateButton = document.getElementById("iterate-button");
     iterateButton.addEventListener("click", iterateCounters);
     const attackButton = document.getElementById("attack-button");
-    attackButton.addEventListener("click", attackMonster);
+    attackButton.addEventListener("click", attack);
+    alert("On your turn - use arrow keys to move counter")
 
     // Load stats initially
     loadStats();
