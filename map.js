@@ -8,7 +8,6 @@ let counters = []; // Store all counters
 let currentCounterIndex = -1; // Track the current counter index
 let monsterHealth = 80;
 let youHealth = 40;
-let helperHealth = 40;
 let ac = 12;
 
 
@@ -37,15 +36,25 @@ function createCounter(name, startTop, startLeft) {
     counters.push(counterDiv); // Add to counters list
 }
 
-function loadStats() {
+function loadStats(change) {
     const infoDisplay = document.getElementById("health");
 
-    // Populate the info-display with health stats
-    infoDisplay.innerHTML = `
+    if (change === "monster") {
+        infoDisplay.innerHTML = `
+        <p style="color: red;"><strong>Monster HP:</strong> ${monsterHealth}</p>
+        <p><strong>Your HP:</strong> ${youHealth}</p>
+        `;
+    } else if (change === "you") {
+        infoDisplay.innerHTML = `
+        <p ><strong>Monster HP:</strong> ${monsterHealth}</p>
+        <p style="color: red;"><strong>Your HP:</strong> ${youHealth}</p>
+        `;
+    } else {
+        infoDisplay.innerHTML = `
         <p><strong>Monster HP:</strong> ${monsterHealth}</p>
         <p><strong>Your HP:</strong> ${youHealth}</p>
-        <p><strong>Helper HP:</strong> ${helperHealth}</p>
-    `;
+    `;    }
+    
 }
 
 function attack(targetty) {
@@ -60,20 +69,25 @@ function attack(targetty) {
         damage = Math.floor(Math.random() * 10) + 5;
         if (attack === 26){
             alert("CRITICAL SUCCESS!");
-            damage = damage * 2
+            
         }
         result = "Hit!"
         if (targetty === "you") {
+            // Monster does double damage
+            damage = damage * 2
             youHealth = youHealth - damage
             if (youHealth <= 0) {
                 location.replace('/loser.html');
             }
+            loadStats("you");
 
         } else {
             monsterHealth = monsterHealth - damage
             if (monsterHealth <= 0) {
                 location.replace('/winner.html');
             }
+            loadStats("monster");
+
         }
     } 
 
@@ -85,7 +99,6 @@ function attack(targetty) {
         <p><strong>Result:</strong> ${result}</p>
         <p><strong>Damage:</strong> ${damage}</p>
     `;
-    loadStats()
     attackButton.disabled = true;
 
 };
@@ -93,7 +106,7 @@ function attack(targetty) {
 function updateAttackButtonState() {
     const attackButton = document.getElementById("attack-button");
     const monster = document.getElementById("counter-Monster");
-    attackButton.disabled = true;
+    // attackButton.disabled = true;
 
     // Disable the attack button if the active counter is the monster
     if (activeCounter && activeCounter.id === monster.id) {
@@ -147,6 +160,7 @@ function iterateCounters() {
     };
 
     // Move to the next counter in the list. If at the end, loop back to the first counter.
+    // https://stackoverflow.com/questions/65839332/how-do-i-use-modulus-for-selection-of-4-statements-iterated-through-a-loop-of-10
     currentCounterIndex = (currentCounterIndex + 1) % counters.length;
 
     // Set the new active counter based on the updated index.
@@ -202,18 +216,20 @@ function iterateCounters() {
                 break;
             }
         }
+        iterateCounters();
     } else {
+        updateAttackButtonState();
         // Allow the user to move the active counter up to 4 times.
         let movesRemaining = 5;
-
+        
         // Add a temporary event listener for keydown to handle movement.
         function handleUserMove(event) {
             if (movesRemaining <= 0) {
-            // Remove the event listener once the user has used all moves.
+                // Remove the event listener once the user has used all moves.
                 window.removeEventListener("keydown", handleUserMove);
                 return;
             }
-
+            
             if (event.key === "ArrowLeft") {
                 moveCounter(-1, 0);
                 movesRemaining--;
@@ -228,11 +244,11 @@ function iterateCounters() {
                 movesRemaining--;
             }
         }
-
+        
         // Attach the event listener to the window for user input.
         window.addEventListener("keydown", handleUserMove);
-    }
 
+    }
     // Add the 'active' class to the new active counter to visually indicate it is active.
     activeCounter.classList.add("active");
 };
@@ -288,7 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
     iterateButton.addEventListener("click", iterateCounters);
     const attackButton = document.getElementById("attack-button");
     attackButton.addEventListener("click", attack);
-    alert("On your turn - use arrow keys to move counter")
+    attackButton.disabled = true;
+    alert("On your turn - use arrow keys to move counter");
 
     // Load stats initially
     loadStats();
