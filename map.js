@@ -12,8 +12,13 @@ let ac = 12;
 
 
 function getCookie(name) {
+    // Retrieve all cookies as a single string
     let value = `; ${document.cookie}`;
+    
+    // Split into two parts - everything before cookie and evrything after and including the cookie
     let parts = value.split(`; ${name}=`);
+    
+    // If the cookie exists, return its value; otherwise, return null
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
 }

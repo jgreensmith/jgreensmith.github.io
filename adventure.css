@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #1a1a2e;
+    background-color: #221a2e;
     color: #f0f0f0;
     display: flex;
     justify-content: center;
@@ -19,7 +19,7 @@ body {
     width: 90%;
     height: 90vh;
     max-width: 800px;
-    background-color: #2a2a40;
+    background-color: #342a40;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -48,7 +48,7 @@ p#story-text {
 }
 
 button.choice-btn {
-    background-color: #4caf50;
+    background-color: #4fb052;
     border: none;
     color: white;
     padding: 10px 20px;
