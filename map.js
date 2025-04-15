@@ -28,6 +28,8 @@ function createCounter(name, startTop, startLeft) {
     const counterDiv = document.createElement("div");
     counterDiv.classList.add("counter");
     
+    // The counter ID includes the name of the counter 
+    // to seperate manual and automatred logic
     const counterId = `counter-${name}`;
     counterDiv.id = counterId;
     counterDiv.innerText = name;
@@ -42,6 +44,7 @@ function createCounter(name, startTop, startLeft) {
 }
 
 function loadStats(change) {
+    // inject releavent HTML about dice rolls and health into the display
     const infoDisplay = document.getElementById("health");
 
     if (change === "monster") {
@@ -66,21 +69,29 @@ function attack(targetty) {
     if (!activeCounter) return;
     const attackButton = document.getElementById("attack-button");
     const infoDisplay = document.getElementById("dice");
+
+    // This is the replica logic of the dnd 20 sided dice!
     let attack = Math.floor(Math.random() * 20) + 6;
     let damage = 0;
     let result = "Miss!"
     
     if (attack >= ac) {
+
+        // 10 sided dice for damage
         damage = Math.floor(Math.random() * 10) + 5;
+
+        // Double the damage on a critical hit!
         if (attack === 26){
             alert("CRITICAL SUCCESS!");
-            
+            damage = damage * 2
         }
         result = "Hit!"
         if (targetty === "you") {
             // Monster does double damage
             damage = damage * 2
             youHealth = youHealth - damage
+
+            // go to loser if your health drops to 0 
             if (youHealth <= 0) {
                 location.replace('/loser.html');
             }
@@ -88,6 +99,8 @@ function attack(targetty) {
 
         } else {
             monsterHealth = monsterHealth - damage
+                        
+            // go to loser if monster health drops to 0 
             if (monsterHealth <= 0) {
                 location.replace('/winner.html');
             }
@@ -96,7 +109,7 @@ function attack(targetty) {
         }
     } 
 
-
+    // render summary
 
     infoDisplay.innerHTML = `
         <p><strong>Attack:</strong> ${attack} to hit</p>
@@ -111,15 +124,14 @@ function attack(targetty) {
 function updateAttackButtonState() {
     const attackButton = document.getElementById("attack-button");
     const monster = document.getElementById("counter-Monster");
-    // attackButton.disabled = true;
 
-    // Disable the attack button if the active counter is the monster
+    // disable the attack button if the active counter is the monster
     if (activeCounter && activeCounter.id === monster.id) {
         attackButton.disabled = true;
         return;
     }
 
-    // Check if the active counter is within 1 space of the monster
+    // check if the active counter is within 1 space of the monster
     const monsterX = parseInt(monster.style.left, 10);
     const monsterY = parseInt(monster.style.top, 10);
 
@@ -146,6 +158,7 @@ function moveCounter(dx, dy) {
     let newX = posX + dx * gridSize;
     let newY = posY + dy * gridSize;
     
+    // move anywhere on the board but not onto the control panel (260)
     if (newX >= 0 && newX < window.innerWidth - gridSize && newX >= 260) posX = newX;
     if (newY >= 0 && newY < window.innerHeight - gridSize) posY = newY;
     
@@ -171,50 +184,42 @@ function iterateCounters() {
     // Set the new active counter based on the updated index.
     activeCounter = counters[currentCounterIndex];
 
-    // Get references to the "Monster" and "You" counters by their IDs.
     const monster = document.getElementById("counter-Monster");
     const you = document.getElementById("counter-You");
 
-    // Check if the active counter is the "Monster".
     if (activeCounter.id === monster.id) {
-        // Get the current position of the "Monster" counter.
+        // current position of the "Monster" counter.
         const monsterX = parseInt(monster.style.left, 10);
         const monsterY = parseInt(monster.style.top, 10);
 
-        // Get the current position of the "You" counter.
+        //current position of the "You" counter.
         const youX = parseInt(you.style.left, 10);
         const youY = parseInt(you.style.top, 10);
 
-        // Initialize movement direction variables (dx for horizontal, dy for vertical).
         let dx = 0, dy = 0;
 
         // Determine the horizontal direction to move:
-        // If the "Monster" is to the left of "You", move right (dx = 1).
-        // If the "Monster" is to the right of "You", move left (dx = -1).
         if (monsterX < youX) dx = 1;
         else if (monsterX > youX) dx = -1;
 
         // Determine the vertical direction to move:
-        // If the "Monster" is above "You", move down (dy = 1).
-        // If the "Monster" is below "You", move up (dy = -1).
         if (monsterY < youY) dy = 1;
         else if (monsterY > youY) dy = -1;
 
-        // Move the "Monster" counter up to 4 spaces towards the "You" counter.
+        // move monster up to 4 spaces towards the "You" counter.
         for (let i = 0; i < 4; i++) {
             // Only move if there is still a direction to move in (dx or dy is not 0).
             if (dx !== 0 || dy !== 0) {
-                moveCounter(dx, dy); // Move the "Monster" one step in the determined direction.
+                moveCounter(dx, dy); // Move the monster one step in the determined direction.
 
                 // Recalculate the "Monster" position after the move.
                 const newMonsterX = parseInt(monster.style.left, 10);
                 const newMonsterY = parseInt(monster.style.top, 10);
 
-                // If the "Monster" aligns with "You" horizontally, stop horizontal movement.
+                // if monster reaches you stop moving
                 if (newMonsterX === youX) dx = 0;
-
-                // If the "Monster" aligns with "You" vertically, stop vertical movement.
                 if (newMonsterY === youY) dy = 0;
+
             } else {
                 moveCounter(1, 0); 
                 attack("you");
@@ -235,6 +240,7 @@ function iterateCounters() {
                 return;
             }
             
+            // Use arrow keys to move you and helper
             if (event.key === "ArrowLeft") {
                 moveCounter(-1, 0);
                 movesRemaining--;
@@ -259,8 +265,10 @@ function iterateCounters() {
 };
 
 async function loadMap() {
+    // map cookie sets image url 
     mapCookie = getCookie('map');
     mapIndex = parseInt(mapCookie[0]);
+    // helper cookie checks if there should be a helper
     helperCookie = getCookie('helper');
 
     res = await fetch("map.json");
@@ -276,6 +284,7 @@ function renderMap(map, helperCookie) {
     const containerWidth = boardContainer.offsetWidth;
     const containerHeight = boardContainer.offsetHeight;
 
+    // calculate number of rows and columns for CSS grid
     const cols = Math.floor(containerWidth / gridSize);
     const rows = Math.floor(containerHeight / gridSize);
 
@@ -292,6 +301,7 @@ function renderMap(map, helperCookie) {
         board.appendChild(cell);
     }
 
+    // create counters with hard coded starting postitions
     createCounter('Monster', '400px', '1200px');
     createCounter('You', '100px', '300px');
 

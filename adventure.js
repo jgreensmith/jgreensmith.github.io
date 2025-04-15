@@ -20,7 +20,7 @@ async function renderStep(stepIndex) {
     // Update story text and image
     storyText.innerText = step.question;
     img.src = await step.image;
-    // Clear and render choices
+    // Clear and render choices - loop over the options and render a button for each one
     choicesContainer.innerHTML = "";
     if (step.options) {
         step.options.forEach((option, index) => {
@@ -30,6 +30,7 @@ async function renderStep(stepIndex) {
             button.onclick = () => {
                 currentStep = option.result;
                 stepTracker.push(index);
+                // CHeck if theres any outcomes that can be used to set browser cookies (map and helper)
                 if (step.outcomes) {
                     const outcomeMessage = step.outcomes[option.outcome];
                     if (outcomeMessage) {
